@@ -1564,36 +1564,45 @@ class BKRA(nn.Module):
         return torch.stack(res)
     
     def forward(self, cond, x_start):
-        fg, mask = cond[0].split(3, 1) # b, 3, 128, 128
+        # Langkah 1: Dapatkan foreground (fg) dan mask dari input conditioning
+        # cond[0] berisi gabungan fg yang sudah di-mask dan mask-nya
+        fg, mask = cond[0].split(3, 1)  # fg shape: (b, 3, h, w), mask shape: (b, 1, h, w)
+        b, c, h, w = fg.shape
+
+        # Langkah 2: Dapatkan latar belakang (background) dari gambar asli `x_start`
+        # `x_start` adalah gambar ground truth sebelum diubah ke latent space.
+        # Kita perlu resize x_start agar dimensinya sama dengan fg (latent space).
+        x_start_resized = torch.nn.functional.interpolate(x_start, size=(h, w), mode='bilinear')
         
-        # Extremely small obeject
-        if not self.training:
-            if (1 - mask).sum() == 0:
-                return cond,0
-        # (1) LMP to extract the forground features [vec_fg]
-        vec_fg = self.LMP(fg, mask, self.n_super_pix, 5) # b n 3
+        # Isolasi area latar belakang dari gambar asli yang sudah di-resize
+        background = x_start_resized * (1 - mask)
+
+        # Langkah 3: Ekstrak fitur dari latar belakang (misalnya, warna rata-rata)
+        # Hitung jumlah piksel latar belakang untuk normalisasi, tambahkan epsilon untuk stabilitas
+        num_bg_pixels = (1 - mask).sum(dim=[1, 2, 3], keepdim=True) + 1e-5
         
-        # (2) BKRM to get the background related features [vec_bg]
-        vec_fg_q = self.mlp_in(vec_fg)
-        code_book = self.bg_embed.transpose(1,0).unsqueeze(0).repeat(vec_fg_q.shape[0], 1, 1).to(fg.device)
-        bg_emb = self.crossAttn(vec_fg_q, code_book)
-        vec_bg = self.mlp_out(bg_emb)
-        vec_bg = rearrange(vec_bg, 'b n c -> b c n')
+        # Hitung warna rata-rata dari latar belakang
+        # sum(dim=[2,3]) akan menjumlahkan semua piksel height dan width
+        bg_mean_color = background.sum(dim=[2, 3], keepdim=True) / num_bg_pixels
         
-        # (3) Reasoning enhancement:
-        # upsample->concate->fuse
-        vec_bg = vec_bg.unsqueeze(3).expand(-1,-1, -1, self.n_super_pix)
-        vec_bg = torch.nn.functional.interpolate(vec_bg, size=[128, 128], mode='nearest')
-        fg2bg = self.fuse(torch.cat((vec_bg, fg),dim=1))
+        # Buat "peta fitur" latar belakang dengan meng-expand warna rata-rata
+        # sehingga ukurannya sama dengan foreground
+        bg_feature_map = bg_mean_color.expand_as(fg)
         
-        # (4) Background feature injection to get new cond
-        new_fg = fg*(1-mask) + fg2bg*mask
+        # Langkah 4: "Suntikkan" fitur latar belakang ke area objek pada foreground
+        # Area non-objek (1-mask) tetap sama, area objek (mask) diisi dengan fitur latar belakang
+        new_fg = fg * (1 - mask) + bg_feature_map * mask
+        
+        # Gabungkan kembali foreground baru dengan mask untuk menjadi conditioning baru
         new_cond = torch.cat((new_fg, mask), dim=1)
         
+        # Langkah 5: Hitung loss (opsional, tapi bagus untuk regularisasi)
         bgrec_loss = None
         if self.rec_loss:
-            bgrec_loss = self.get_loss(new_fg*mask, x_start*mask, mean=False).mean([1, 2, 3])
-        
+            # Loss dihitung dari seberapa baik area objek yang baru bisa merekonstruksi
+            # area objek di gambar asli, dengan gaya dari latar belakang
+            bgrec_loss = self.get_loss(new_fg * mask, x_start_resized * mask, mean=False).mean([1, 2, 3])
+            
         return [new_cond], bgrec_loss
 
     def get_loss(self, pred, target, mean=True):
