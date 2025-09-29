@@ -12,7 +12,7 @@ model:
     image_size: 64
     channels: 3
     concat_mode: true
-    monitor: val/loss
+    monitor: train/loss_epoch
     scheduler_config:
       target: ldm.lr_scheduler.LambdaWarmUpCosineScheduler
       params:
