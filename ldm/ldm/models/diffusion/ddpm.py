@@ -1071,7 +1071,7 @@ class LatentDiffusion(DDPM):
         loss_dict.update({f'{prefix}/loss_simple': loss_simple.mean()})
 
 
-        logvar_t = self.logvar[t].to(self.device)
+        logvar_t = self.logvar.to(self.device)[t]
         loss = loss_simple / torch.exp(logvar_t) + logvar_t
         if bgrec_loss is not None:
             loss_dict.update({f'{prefix}/bgrec_loss': bgrec_loss.mean()})
