@@ -705,11 +705,12 @@ if __name__ == "__main__":
         path=config.data['params']['train']['target']
         
 
-        if opt.stage == str(0):
-            dataSet = PIL_data.InpaintingTrain_autoencoder(img_size,path)
+        #if opt.stage == str(0):
+            #dataSet = PIL_data.InpaintingTrain_autoencoder(img_size,path)
 
-        if opt.stage == str(1):
-            dataSet = PIL_data.InpaintingTrain_ldm(img_size,path)
+        #if opt.stage == str(1):
+            #dataSet = PIL_data.InpaintingTrain_ldm(img_size,path)
+        dataSet = PIL_data.InpaintingTrain_ldm(img_size,path)
 
         data = DataLoader(
                 dataSet,
