@@ -154,7 +154,7 @@ class InpaintingTrain_ldm(Dataset):
         self.config = config or OmegaConf.create()
         self.data_root=data_root
         self.img_paths = sorted(_list_image_files_recursively(os.path.join(self.data_root, 'images')))
-        self.mask_paths = sorted(_list_image_files_recursively(os.path.join(self.data_root, 'masks')))
+        self.mask_paths = sorted(_list_image_files_recursively(os.path.join(self.data_root, 'GT')))
                     
     def __len__(self):
         return len(self.mask_paths)
