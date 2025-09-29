@@ -92,13 +92,13 @@ data:
     num_workers: 0
     wrap: true
     train:
-      target: /media/sde/zpc/Dataset/COD_Diff_/train
+      target: /kaggle/input/military-camouflage-soldiers-dataset-mcs1k/dataset-splitM/Training/images
       params:
         size: 512
         crop_size: 256
         state: train
     validation:
-      target: /mnt/sda/zpc/Dataset/COD/COD_Diff_/validation
+      target: /kaggle/input/military-camouflage-soldiers-dataset-mcs1k/dataset-splitM/Testing/images
       params:
         size: 512
         crop_size: 256
