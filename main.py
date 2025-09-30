@@ -770,6 +770,10 @@ if __name__ == "__main__":
                 print("training......")
                 trainer.fit(model, data)
             except Exception:
+                print("="*80)
+                print("!!! TRAINING CRASH! Berikut adalah error yang sebenarnya: !!!")
+                traceback.print_exc() # <-- Cetak traceback lengkap dari errornya
+                print("="*80)
                 melk()
                 raise
         if not opt.no_test and not trainer.interrupted:
