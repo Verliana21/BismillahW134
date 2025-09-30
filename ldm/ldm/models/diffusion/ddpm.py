@@ -349,6 +349,7 @@ class DDPM(pl.LightningModule):
         return loss, loss_dict
 
     def training_step(self, batch, batch_idx, dataloader_idx=0):
+        print(f"DEBUG: training_step dimulai untuk batch ke-{batch_idx}!")
         loss, loss_dict = self.shared_step(batch)
 
         self.log_dict(loss_dict, prog_bar=True,
