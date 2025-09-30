@@ -92,13 +92,13 @@ data:
     num_workers: 0
     wrap: true
     train:
-      target: /content/military-camouflage-soldiers-dataset-mcs1k/dataset-splitM/Training
+      target: /kaggle/input/military-camouflage-soldiers-dataset-mcs1k/dataset-splitM/Training
       params:
         size: 512
         crop_size: 256
         state: train
     validation:
-      target: /content/military-camouflage-soldiers-dataset-mcs1k/dataset-splitM/Testing
+      target: /kaggle/input/military-camouflage-soldiers-dataset-mcs1k/dataset-splitM/Testing
       params:
         size: 512
         crop_size: 256
