@@ -161,7 +161,7 @@ class InpaintingTrain_ldm(Dataset):
 
 
     def __getitem__(self, i):
-        
+        print(f"DEBUG: DataLoader mencoba mengambil item ke-{i}...")
         mask_address=self.mask_paths[i]
         
         mask = Image.open(mask_address).convert("L").resize((512,512))
