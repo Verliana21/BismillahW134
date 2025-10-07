@@ -1411,7 +1411,15 @@ class LatentDiffusion(DDPM):
 
      #   print("sampling")
       #  return 0
+    # Di dalam kelas LatentDiffusion, di bawah method lain, tambahkan ini:
 
+    def test_step(self, batch, batch_idx):
+        print(f"DEBUG: Menjalankan test_step untuk batch ke-{batch_idx}...")
+    # Memanggil fungsi log_images dari kelas induk (DDPM) yang sudah canggih.
+    # Fungsi ini akan menghasilkan gambar kamuflase dan menanganinya.
+        self.log_images(batch, N=1, n_row=1, ddim_steps=200, ddim_eta=1.0)
+        print(f"DEBUG: test_step untuk batch ke-{batch_idx} selesai.")
+        return {} # Cukup kembalikan dictionary kosong
 
     def configure_optimizers(self):
         lr = self.learning_rate
