@@ -718,10 +718,18 @@ if __name__ == "__main__":
         #     print(f"{k}, {data.datasets[k].__class__.__name__}, {len(data.datasets[k])}")
 
 
-        batch_size = config.data['params']['batch_size']
-        img_size = config.data['params']['train']['params']['size']
-        path=config.data['params']['train']['target']
-        
+       batch_size = config.data.params.batch_size
+
+    # Cek apakah kita sedang test atau train, lalu ambil path & size yang sesuai
+    if 'test' in config.data.params:
+        print("INFO: Mengambil konfigurasi dari 'test' section.")
+        data_cfg = config.data.params.test
+    else:
+        print("INFO: Mengambil konfigurasi dari 'train' section.")
+        data_cfg = config.data.params.train
+
+        path = data_cfg.target
+        img_size = data_cfg.params.size
 
         #if opt.stage == str(0):
             #dataSet = PIL_data.InpaintingTrain_autoencoder(img_size,path)
