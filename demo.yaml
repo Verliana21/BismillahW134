@@ -1,4 +1,3 @@
-%%writefile demo.yaml
 data:
   target: main.DataModuleFromConfig
   params:
