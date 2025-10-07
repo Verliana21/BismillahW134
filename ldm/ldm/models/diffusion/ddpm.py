@@ -1406,11 +1406,11 @@ class LatentDiffusion(DDPM):
     #             return {key: log[key] for key in return_keys}
     #     return log
 
-    @torch.no_grad()
-    def log_images(self):
+    #@torch.no_grad()
+    #def log_images(self):
 
-        print("sampling")
-        return 0
+     #   print("sampling")
+      #  return 0
 
 
     def configure_optimizers(self):
