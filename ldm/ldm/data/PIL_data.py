@@ -5,7 +5,7 @@ from tqdm import tqdm
 import numpy as np
 import torch
 from main import instantiate_from_config
-from ldm.models.diffusion.ddim import DDIMSampler
+from ..models.diffusion.ddim import DDIMSampler
 from torch.utils.data import Dataset, DataLoader
 import blobfile as bf
 import json
