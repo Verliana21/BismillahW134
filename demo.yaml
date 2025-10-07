@@ -4,6 +4,6 @@ data:
     batch_size: 1
     num_workers: 0
     test:
-      target: /kaggle/input/military-camouflage-soldiers-dataset-mcs1k/dataset-splitM/Training # <-- Sesuaikan path ini
+      target: /kaggle/input/military-camouflage-soldiers-dataset-mcs1k/dataset-splitM/Training/images/image1.jpg # <-- Sesuaikan path ini
       params:
         size: 512
