@@ -718,15 +718,15 @@ if __name__ == "__main__":
         #     print(f"{k}, {data.datasets[k].__class__.__name__}, {len(data.datasets[k])}")
 
 
-       batch_size = config.data.params.batch_size
+        batch_size = config.data.params.batch_size
 
-    # Cek apakah kita sedang test atau train, lalu ambil path & size yang sesuai
-    if 'test' in config.data.params:
-        print("INFO: Mengambil konfigurasi dari 'test' section.")
-        data_cfg = config.data.params.test
-    else:
-        print("INFO: Mengambil konfigurasi dari 'train' section.")
-        data_cfg = config.data.params.train
+        # Cek apakah kita sedang test atau train, lalu ambil path & size yang sesuai
+        if 'test' in config.data.params:
+            print("INFO: Mengambil konfigurasi dari 'test' section.")
+            data_cfg = config.data.params.test
+        else:
+            print("INFO: Mengambil konfigurasi dari 'train' section.")
+            data_cfg = config.data.params.train
 
         path = data_cfg.target
         img_size = data_cfg.params.size
