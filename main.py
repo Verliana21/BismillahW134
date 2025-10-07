@@ -1,3 +1,21 @@
+import sys
+import os
+
+# Menambahkan path ke folder utama proyek (BismillahW134) ke dalam "buku alamat" Python
+# os.path.dirname(__file__) akan mendapatkan direktori dari file main.py ini
+project_root = os.path.abspath(os.path.dirname(__file__))
+sys.path.insert(0, project_root)
+
+# Menambahkan path ke folder 'ldm' luar, untuk mengatasi struktur ldm/ldm
+outer_ldm_path = os.path.join(project_root, 'ldm')
+sys.path.insert(0, outer_ldm_path)
+
+# Ini hanya untuk debugging, untuk memastikan path-nya benar
+print("="*50)
+print(f"DEBUG: Project Root ditambahkan ke sys.path: {project_root}")
+print(f"DEBUG: Outer LDM Path ditambahkan ke sys.path: {outer_ldm_path}")
+print("="*50)
+
 import argparse, os, sys, glob
 sys.path.append(os.getcwd()+"/ldm")
 import numpy as np
