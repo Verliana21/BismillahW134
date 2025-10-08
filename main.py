@@ -789,6 +789,22 @@ if __name__ == "__main__":
 
         signal.signal(signal.SIGUSR1, melk)
         signal.signal(signal.SIGUSR2, divein)
+        # --- BLOK DIAGNOSIS BARU ---
+        print("\n" * 3)
+        print("="*80)
+        print("MEMERIKSA OBJEK MODEL SEBELUM EKSEKUSI...")
+
+        if hasattr(model, 'test_step'):
+            print("HASIL: Objek 'model' DITEMUKAN MEMILIKI method 'test_step'.")
+            print("SEHARUSNYA TIDAK ADA ERROR 'No test_step()'.")
+        else:
+            print("HASIL: Objek 'model' DITEMUKAN TIDAK MEMILIKI method 'test_step'.")
+            print("INI ADALAH BUKTI BAHWA FILE DDPM.PY YANG JALAN ADALAH VERSI LAMA.")
+        
+        print(f"Tipe objek model yang diperiksa: {type(model)}")
+        print("="*80)
+        print("\n" * 3)
+# ---------------------------
 
         # run
         if opt.train:
