@@ -1394,15 +1394,19 @@ class DiffusionWrapper(pl.LightningModule):
             # self.BKRA_module = BKRA(LR_config)
         assert self.conditioning_key in [None, 'concat', 'crossattn', 'hybrid', 'adm']
 
-    def forward(self, x, t, x_start, c_concat: list = None, c_crossattn: list = None):
+    def forward(self, x, t, x_start=None, c_concat: list = None, c_crossattn: list = None): # Tambahkan default None ke x_start
+        bgrec_loss = None # Inisialisasi bgrec_loss
         if self.conditioning_key is None:
             out = self.diffusion_model(x, t)
         elif self.conditioning_key == 'concat':
-            if self.LR_config['bg_retrieval']:
-                c_concat, bgrec_loss = self.SBG_module(c_concat, x_start)
-                # c_concat, bgrec_loss = self.BKRA_module(c_concat, x_start)
+        # --- PERBAIKAN DI SINI ---
+            if self.LR_config['bg_retrieval'] and x_start is not None:
+            # Hanya jalankan BKRA jika kita sedang training (x_start tersedia)
+            c_concat, bgrec_loss = self.SBG_module(c_concat, x_start)
+        # -------------------------
             xc = torch.cat([x] + c_concat, dim=1)
             out = self.diffusion_model(xc, t)
+        
         elif self.conditioning_key == 'crossattn':
             cc = torch.cat(c_crossattn, 1)
             out = self.diffusion_model(x, t, context=cc)
