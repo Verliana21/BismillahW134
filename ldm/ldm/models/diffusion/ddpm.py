@@ -1402,7 +1402,7 @@ class DiffusionWrapper(pl.LightningModule):
         # --- PERBAIKAN DI SINI ---
             if self.LR_config['bg_retrieval'] and x_start is not None:
             # Hanya jalankan BKRA jika kita sedang training (x_start tersedia)
-            c_concat, bgrec_loss = self.SBG_module(c_concat, x_start)
+                c_concat, bgrec_loss = self.SBG_module(c_concat, x_start)
         # -------------------------
             xc = torch.cat([x] + c_concat, dim=1)
             out = self.diffusion_model(xc, t)
