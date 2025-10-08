@@ -344,8 +344,7 @@ class DDPM(pl.LightningModule):
         return x
 
     def shared_step(self, batch):
-        z,c = self.get_input(batch, self.first_stage_key)
-        x=z
+        x = self.get_input(batch, self.first_stage_key)
         loss, loss_dict = self(x)
         return loss, loss_dict
 
@@ -388,7 +387,7 @@ class DDPM(pl.LightningModule):
     @torch.no_grad()
     def log_images(self, batch, N=8, n_row=2, sample=True, return_keys=None, **kwargs):
         log = dict()
-        x = self.get_input(batch, self.first_stage_key)
+        x,c = self.get_input(batch, self.first_stage_key)
         N = min(x.shape[0], N)
         n_row = min(x.shape[0], n_row)
         x = x.to(self.device)[:N]
